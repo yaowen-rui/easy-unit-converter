@@ -1,0 +1,34 @@
+
+<nz-switch [(ngModel)]="theme">
+  <span checked>Dark</span>
+  <span unchecked>Light</span>
+</nz-switch>
+
+<ul nz-menu nzMode="inline" style="width: 200px;" [nzTheme]="theme ? 'dark' : 'light'">
+  <ng-container *ngFor="let menu of menus;">
+    <li nz-submenu nzOpen nzTitle={{menu.title}}>
+      <ul>
+        <ng-container *ngFor="let unit of menu.units">
+          <li nz-menu-item (click)="selectUnit(unit)">
+            <i nz-icon [nzType]="unit.icon"></i>
+            <span>{{ unit.name }}</span>
+          </li>
+        </ng-container>
+      </ul>
+    </li>
+  </ng-container>
+
+  <li nz-submenu nzTitle="Common File Converter"  nzIcon="file-unknown">
+    <ul>
+      <li nz-submenu nzTitle="PDF-DOC"></li>
+      <li nz-submenu nzTitle="csv-excel"></li>
+    </ul>
+  </li>
+  <li nz-submenu nzTitle="Currency" nzIcon="money-collect">
+    <ul>
+      <li nz-menu-item>Option 9</li>
+      <li nz-menu-item>Option 10</li>
+      <li nz-menu-item>Option 11</li>
+    </ul>
+  </li>
+</ul>

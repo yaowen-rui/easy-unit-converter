@@ -5,7 +5,9 @@
   "projects": {
     "easy-unit-converter": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": {
+        "@schematics/angular:component": {"style": "less"}
+      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -19,10 +21,15 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "**/*",
+                "input": "./node_modules/@ant-design/icons-angular/src/inline-svg/",
+                "output": "/assets/"
               }
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.less"
             ]
           },
           "configurations": {
@@ -75,11 +82,14 @@
               }
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.less"
             ]
           }
         }
       }
     }
+  },
+  "schematics": {
+        "@schematics/angular:component": {"style": "less"}
   }
 }
