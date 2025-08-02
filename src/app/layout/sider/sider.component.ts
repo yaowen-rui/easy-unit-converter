@@ -14,7 +14,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-sider',
   standalone:true,
-  imports:[NzMenuModule,FormsModule,NzSwitchModule, NzFlexModule, NzIconModule,CommonModule],
+  imports:[NzMenuModule,FormsModule,NzSwitchModule, NzFlexModule,CommonModule, NzIconModule],
   templateUrl: './sider.component.html',
   styleUrls: ['./sider.component.less']
 })
@@ -23,7 +23,9 @@ export class SiderComponent implements OnInit {
   theme:boolean = true
   menus: Menu[]=[]
 
-  constructor(private router:Router, private activeRoute: ActivatedRoute) { }
+  constructor(private router:Router, private activeRoute: ActivatedRoute) {
+
+  }
 
   ngOnInit() {
     this.menus = MENUS
