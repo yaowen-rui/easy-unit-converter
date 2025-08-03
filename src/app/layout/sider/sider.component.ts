@@ -28,12 +28,11 @@ export class SiderComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.menus = MENUS
+    this.menus = MENUS//Loads MENU  when the sidebar is initialized.
   }
 
   selectUnit(unit:Unit) {
-
+    //When a menu item is clicked, it uses the Router to navigate to a route like /sider/unit/:id
     this.router.navigate(['unit', unit.id], {relativeTo:this.activeRoute} )
-
   }
 }

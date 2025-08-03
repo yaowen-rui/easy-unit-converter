@@ -4,7 +4,7 @@
   <span unchecked>Light</span>
 </nz-switch>
 
-<ul nz-menu nzMode="inline" style="width: 200px;" [nzTheme]="theme ? 'dark' : 'light'">
+<ul nz-menu nzMode="inline" style="width: 200px; max-height: 80vh; overflow-y: auto;" [nzTheme]="theme ? 'dark' : 'light'">
   <ng-container *ngFor="let menu of menus;">
     <li nz-submenu nzOpen nzTitle={{menu.title}}>
       <ul>
