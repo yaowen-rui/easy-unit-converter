@@ -24,6 +24,8 @@ export class SiderComponent implements OnInit {
   menus: Menu[]=[];
   contextMenuUnit:Unit | null = null;
   contextMenuPosition = { x: 0, y: 0 };
+  private localStorageKey = 'favoriteList';
+
 
   constructor(private router:Router, private activeRoute: ActivatedRoute, private changeDetectorRef:ChangeDetectorRef) {
     //This constructor initializes the component and injects the Router and ActivatedRoute services.
@@ -33,7 +35,8 @@ export class SiderComponent implements OnInit {
 
   ngOnInit() {
     this.menus = MENUS//Loads MENU  when the sidebar is initialized.
-
+    //this.menus = JSON.parse(JSON.stringify(MENUS)); // Deep clone to avoid reference issues
+    this.readFromStorage();
     document.addEventListener('mousedown', this.handleDocumentClick, true);
   }
 
@@ -57,14 +60,36 @@ export class SiderComponent implements OnInit {
     this.changeDetectorRef.detectChanges(); // Explicitly trigger change detection, Ensure the view updates immediately
   }
 
+  saveFavoriteToStorage(){
+    const favoriteList = this.menus.find(m => m.title === 'Favorite');
+    if (favoriteList) {
+      //store an array of unit IDs in localStorage
+      localStorage.setItem('favoriteUnitIds', JSON.stringify(favoriteList.units.map(u => u.id)));
+    }
+  }
+
   addToFavorite(unit: Unit) {
-    unit.isFavorite = true;
-    this.closeContextMenu();
+    const favoriteList = this.menus.find(m=> m.title === 'Favorite')
+    //Uses .some() to check if any unit in favoriteMenu.units has the same id as the one you want to add.
+    //This prevents adding the same unit twice
+    if(favoriteList && !favoriteList.units.some(u => u.id === unit.id)) {
+      favoriteList.units.push(unit);
+      unit.isFavorite = true;
+      this.closeContextMenu();
+      this.saveFavoriteToStorage();
+    }
   }
 
   removeFromFavorite(unit: Unit) {
-    unit.isFavorite = false;
-    this.closeContextMenu();
+    const favoriteList = this.menus.find(m => m.title === 'Favorite')
+    if (favoriteList) {
+      favoriteList.units = favoriteList.units.filter(u => u.id !== unit.id);
+      unit.isFavorite = false;
+      this.closeContextMenu();
+      this.saveFavoriteToStorage();
+      this.changeDetectorRef.detectChanges(); // Ensure the view updates immediately
+    }
+
   }
 
   private handleDocumentClick = (event: MouseEvent)=>{
@@ -76,8 +101,19 @@ export class SiderComponent implements OnInit {
     // only close if clicking outside menu
     if (menuEl && !menuEl.contains(target)) {
       this.closeContextMenu();
-      console.log("event target: "+event.target+", contextMenuUnit: "+this.contextMenuUnit);
+      //console.log("event target: "+event.target+", contextMenuUnit: "+this.contextMenuUnit);
     }
 
   };
+
+  private readFromStorage() {
+    const favoriteList = this.menus.find(m => m.title === 'Favorite');
+    const allUnitsList = this.menus.find(m => m.title === 'All Units');
+    const favoriteUnitIds = localStorage.getItem('favoriteUnitIds');
+    if(favoriteList && allUnitsList) {
+      favoriteList.units = allUnitsList.units.filter(u=>favoriteUnitIds?.includes(u.id))
+      allUnitsList.units.forEach(u=> u.isFavorite = favoriteUnitIds?.includes(u.id))
+    }
+  }
+
 }
