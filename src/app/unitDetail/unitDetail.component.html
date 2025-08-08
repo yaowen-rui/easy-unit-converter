@@ -1,25 +1,28 @@
 <!-- <ng-container *ngIf="singleUnit">
   <h2>{{ singleUnit.name }}</h2>
 </ng-container> -->
-<ng-container *ngIf="detail" class="content">
-  <div class="detail-block">
-    <h2 color="black">{{ detail.name }}</h2>
-    <table>
-      <tr *ngFor="let row of detail.rows">
-        <td>{{ row.label }}</td>
-        <td class="input-container">
-          <input type="number" placeholder="Enter value" [(ngModel)]="row.value" [disabled]="row.id !== activeRowId"
-            (focus)="activeRowId = row.id" (ngModelChange)="onInputChange(row)" />
-        </td>
-        <td>{{ row.symbol }}</td>
-      </tr>
-      <tr>
-        <button nz-button nzType="dashed">
-          <nz-icon nzType="delete" />
-          Clear
-        </button>
-      </tr>
-    </table>
-  </div>
+@if (detail){
+  <ng-container class="content">
+    <div class="detail-block">
+      <h2 color="black">{{ detail.name }}</h2>
+      <table>
+        <tr *ngFor="let row of detail.rows">
+          <td>{{ row.label }}</td>
+          <td class="input-container">
+            <input type="number" placeholder="Enter value" [(ngModel)]="row.value" [disabled]="row.id !== activeRowId"
+              (focus)="activeRowId = row.id" (ngModelChange)="onInputChange(row)" />
+          </td>
+          <td>{{ row.symbol }}</td>
+        </tr>
+        <tr>
+          <button nz-button nzType="dashed">
+            <nz-icon nzType="delete" />
+            Clear
+          </button>
+        </tr>
+      </table>
+    </div>
 
-</ng-container>
+  </ng-container>
+}
+

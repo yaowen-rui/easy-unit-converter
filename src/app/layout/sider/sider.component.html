@@ -1,24 +1,37 @@
-
 <nz-switch [(ngModel)]="theme">
   <span checked>Dark</span>
   <span unchecked>Light</span>
 </nz-switch>
 
 <ul nz-menu nzMode="inline" style="width: 200px; max-height: 80vh; overflow-y: auto;" [nzTheme]="theme ? 'dark' : 'light'">
-  <ng-container *ngFor="let menu of menus;">
+  @for (menu of menus; track menu) {
+  <ng-container>
     <li nz-submenu nzOpen nzTitle={{menu.title}}>
       <ul>
-        <ng-container *ngFor="let unit of menu.units">
-          <li nz-menu-item (click)="selectUnit(unit)">
-            <i nz-icon [nzType]="unit.icon"></i>
-            <span>{{ unit.name }}</span>
+        @for (unit of menu.units; track unit) {
+        <ng-container>
+          <li nz-menu-item (click)="selectUnit(unit)" (contextmenu)="onUnitRightClick($event, unit)">
+            <i nz-icon [nzType]="unit.icon"></i><span>{{ unit.name }}</span>
+            @if (contextMenuUnit === unit) {
+              <!--stopPropagation():click inside the context menu panel (including the buttons), it doesn’t trigger the "click outside" logic.-->
+            <div class="context-unit-menu" [style.top.px]="contextMenuPosition.y" [style.left.px]="contextMenuPosition.x" >
+              @if (!unit.isFavorite) {
+              <button nz-button nzType="default" (click)="addToFavorite(unit); $event.stopPropagation()">Add to Favorite</button>
+              }
+              @if( unit.isFavorite) {
+              <button nz-button nzType="default" (click)="removeFromFavorite(unit); $event.stopPropagation()">Remove from Favorites</button>
+              }
+            </div>
+            }
           </li>
         </ng-container>
+      }
       </ul>
     </li>
   </ng-container>
+  }
 
-  <li nz-submenu nzTitle="Common File Converter"  nzIcon="file-unknown">
+  <li nz-submenu nzTitle="Common File Converter" nzIcon="file-unknown">
     <ul>
       <li nz-submenu nzTitle="PDF-DOC"></li>
       <li nz-submenu nzTitle="csv-excel"></li>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { MENUS } from '../../data/menus';
 import { Unit } from '../../models/unit.model';
 import { Menu } from '../../models/menu.model';
@@ -20,19 +20,64 @@ import { CommonModule } from '@angular/common';
 })
 
 export class SiderComponent implements OnInit {
-  theme:boolean = true
-  menus: Menu[]=[]
+  theme:boolean = true;
+  menus: Menu[]=[];
+  contextMenuUnit:Unit | null = null;
+  contextMenuPosition = { x: 0, y: 0 };
 
-  constructor(private router:Router, private activeRoute: ActivatedRoute) {
+  constructor(private router:Router, private activeRoute: ActivatedRoute, private changeDetectorRef:ChangeDetectorRef) {
+    //This constructor initializes the component and injects the Router and ActivatedRoute services.
+    //It also sets up the initial state of the menus array
 
   }
 
   ngOnInit() {
     this.menus = MENUS//Loads MENU  when the sidebar is initialized.
+
+    document.addEventListener('mousedown', this.handleDocumentClick, true);
+  }
+
+  ngOnDestroy() {
+    document.removeEventListener('mousedown', this.handleDocumentClick, true);
   }
 
   selectUnit(unit:Unit) {
     //When a menu item is clicked, it uses the Router to navigate to a route like /sider/unit/:id
     this.router.navigate(['unit', unit.id], {relativeTo:this.activeRoute} )
   }
+
+  onUnitRightClick(event: MouseEvent, unit: Unit) {
+    event.preventDefault();
+    this.contextMenuUnit = unit;
+    this.contextMenuPosition = { x: event.clientX+2, y: event.clientY+2 };
+  }
+
+  closeContextMenu() {
+    this.contextMenuUnit = null;
+    this.changeDetectorRef.detectChanges(); // Explicitly trigger change detection, Ensure the view updates immediately
+  }
+
+  addToFavorite(unit: Unit) {
+    unit.isFavorite = true;
+    this.closeContextMenu();
+  }
+
+  removeFromFavorite(unit: Unit) {
+    unit.isFavorite = false;
+    this.closeContextMenu();
+  }
+
+  private handleDocumentClick = (event: MouseEvent)=>{
+    if(!this.contextMenuUnit) return;
+
+    const target = event.target as HTMLElement;
+    const menuEl = document.querySelector('.context-unit-menu');
+
+    // only close if clicking outside menu
+    if (menuEl && !menuEl.contains(target)) {
+      this.closeContextMenu();
+      console.log("event target: "+event.target+", contextMenuUnit: "+this.contextMenuUnit);
+    }
+
+  };
 }
