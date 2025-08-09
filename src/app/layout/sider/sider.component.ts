@@ -24,7 +24,7 @@ export class SiderComponent implements OnInit {
   menus: Menu[]=[];
   contextMenuUnit:Unit | null = null;
   contextMenuPosition = { x: 0, y: 0 };
-  private localStorageKey = 'favoriteList';
+  private localStorageKey = 'favoriteUnitIds';
 
 
   constructor(private router:Router, private activeRoute: ActivatedRoute, private changeDetectorRef:ChangeDetectorRef) {
@@ -64,7 +64,7 @@ export class SiderComponent implements OnInit {
     const favoriteList = this.menus.find(m => m.title === 'Favorite');
     if (favoriteList) {
       //store an array of unit IDs in localStorage
-      localStorage.setItem('favoriteUnitIds', JSON.stringify(favoriteList.units.map(u => u.id)));
+      localStorage.setItem(this.localStorageKey, JSON.stringify(favoriteList.units.map(u => u.id)));
     }
   }
 
@@ -81,8 +81,10 @@ export class SiderComponent implements OnInit {
   }
 
   removeFromFavorite(unit: Unit) {
+    console.log("triggered removeFromFavorite for unit: ", unit);
     const favoriteList = this.menus.find(m => m.title === 'Favorite')
     if (favoriteList) {
+      console.log("Removing unit from favorite: ", unit);
       favoriteList.units = favoriteList.units.filter(u => u.id !== unit.id);
       unit.isFavorite = false;
       this.closeContextMenu();
@@ -109,7 +111,7 @@ export class SiderComponent implements OnInit {
   private readFromStorage() {
     const favoriteList = this.menus.find(m => m.title === 'Favorite');
     const allUnitsList = this.menus.find(m => m.title === 'All Units');
-    const favoriteUnitIds = localStorage.getItem('favoriteUnitIds');
+    const favoriteUnitIds = localStorage.getItem(this.localStorageKey);
     if(favoriteList && allUnitsList) {
       favoriteList.units = allUnitsList.units.filter(u=>favoriteUnitIds?.includes(u.id))
       allUnitsList.units.forEach(u=> u.isFavorite = favoriteUnitIds?.includes(u.id))

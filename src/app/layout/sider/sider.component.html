@@ -10,16 +10,16 @@
       <ul>
         @for (unit of menu.units; track unit) {
         <ng-container>
-          <li nz-menu-item (click)="selectUnit(unit)" (contextmenu)="onUnitRightClick($event, unit)">
+          <li nz-menu-item (click)="selectUnit(unit)" (click)="$event.stopPropagation()" (contextmenu)="onUnitRightClick($event, unit)" >
             <i nz-icon [nzType]="unit.icon"></i><span>{{ unit.name }}</span>
             @if (contextMenuUnit === unit) {
               <!--stopPropagation():click inside the context menu panel (including the buttons), it doesn’t trigger the "click outside" logic.-->
-            <div class="context-unit-menu" [style.top.px]="contextMenuPosition.y" [style.left.px]="contextMenuPosition.x" >
+            <div class="context-unit-menu" [style.top.px]="contextMenuPosition.y" [style.left.px]="contextMenuPosition.x" (click)="$event.stopPropagation()" >
               @if (!unit.isFavorite) {
-              <button nz-button nzType="default" (click)="addToFavorite(unit); $event.stopPropagation()">Add to Favorite</button>
+              <button nz-button nzType="default" type="button" (click)="addToFavorite(unit); $event.stopPropagation()">Add to Favorite</button>
               }
               @if( unit.isFavorite) {
-              <button nz-button nzType="default" (click)="removeFromFavorite(unit); ">Remove from Favorites</button>
+              <button nz-button nzType="default" type="button" (click)="removeFromFavorite(unit); $event.stopPropagation(); $event.preventDefault()">Remove from Favorites</button>
               }
             </div>
             }
