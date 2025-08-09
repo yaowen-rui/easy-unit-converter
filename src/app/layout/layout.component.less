@@ -3,6 +3,11 @@
 }
 nz-header {
   position: fixed;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start; /* keep items starting from left */
+  gap: 1rem;                  /* optional spacing between items */
+
   left: 200px;
   top: 0;
   right: 0;
@@ -12,8 +17,8 @@ nz-header {
 
 nz-header,
 nz-footer {
-  background: #7dbcea;
-  color: #fff;
+  background: rgb(255, 255, 255);
+  color: black;
 }
 
 nz-footer {

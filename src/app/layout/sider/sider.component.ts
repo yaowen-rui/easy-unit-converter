@@ -81,10 +81,9 @@ export class SiderComponent implements OnInit {
   }
 
   removeFromFavorite(unit: Unit) {
-    console.log("triggered removeFromFavorite for unit: ", unit);
     const favoriteList = this.menus.find(m => m.title === 'Favorite')
     if (favoriteList) {
-      console.log("Removing unit from favorite: ", unit);
+      //console.log("Removing unit from favorite: ", unit);
       favoriteList.units = favoriteList.units.filter(u => u.id !== unit.id);
       unit.isFavorite = false;
       this.closeContextMenu();
