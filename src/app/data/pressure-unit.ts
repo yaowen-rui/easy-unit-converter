@@ -12,6 +12,6 @@ export const PRESSURE_UNIT: UnitDetailTable = {
     { id: 'bar',    label: 'Bars',                         symbol: 'bar',   toBaseFactor: 100000,        value: 0 },
     { id: 'mbar',   label: 'Millibars',                    symbol: 'mbar',  toBaseFactor: 100,           value: 0 },
     { id: 'inHg',   label: 'Inches of Mercury',            symbol: 'inHg',  toBaseFactor: 3386.389,      value: 0 },
-    { id: 'N/m²',   label: 'Newtons per Meter Squared',    symbol: 'N/m²',  toBaseFactor: 1,             value: 0 }, // 1 Pascal
+    { id: 'Pa',     label: 'Pascals',                      symbol: 'Pa',    toBaseFactor: 1,             value: 0 }, // 1 Pascal
   ]
 }

@@ -9,8 +9,16 @@ export interface ConversionRow {
   label: string;
   symbol:string;
   /*multiplier to convert from this unit to baseUnit*/
-  toBaseFactor:number;
-  value:number;
+  toBaseFactor?:number;//base=value * toBaseFactor
+  value:number|string;
+
+  //affine support: base=value * toBaseScale
+  toBaseScale?:number;//default 1
+  toBaseOffset?:number;//default 0
+
+  //for non-linear or string-based coversion
+  toBase?:(v:unknown) => number;//function to convert from this unit to base
+  fromBase?:(b:number) => number|string;
 }
 
 export interface UnitDetailTable {

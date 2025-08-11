@@ -35,15 +35,42 @@ export class UnitDetailComponent implements OnInit {
     })
   }
 
+  asNumber = (v: unknown): number => {
+    if (typeof v === 'number') return Number.isFinite(v) ? v : 0;
+    if (typeof v === 'string') {
+      const n = parseFloat(v.trim());
+      return Number.isFinite(n) ? n : 0;
+    }
+    return 0;
+  };
+
   onInputChange(row: ConversionRow) {
-    const base = row.value * row.toBaseFactor;
+    const toBase = (r: ConversionRow, v: unknown): number => {
+      if (typeof r.toBase === 'function') return r.toBase(v); // v can be string or number
+      const scale = r.toBaseScale ?? r.toBaseFactor ?? 1;
+      const offset = r.toBaseOffset ?? 0;
+      return this.asNumber(v) * scale + offset;
+    };
+
+    const fromBase = (r: ConversionRow, b: number): number | string => {
+      if (typeof r.fromBase === 'function') return r.fromBase(b);
+      const scale = r.toBaseScale ?? r.toBaseFactor ?? 1;
+      const offset = r.toBaseOffset ?? 0;
+      const v = (b - offset) / scale;
+      return Number.isFinite(v) ? Number(v.toFixed(6)) : '';
+    };
+
+    const baseVal = toBase(row, row.value);
     this.detail.rows.forEach(r => {
-      if (r.id !== row.id) {
-        //special handling for temperature and base units
-        r.value = parseFloat((base / r.toBaseFactor).toFixed(6));
-      }
+      if (r.id !== row.id) r.value = fromBase(r, baseVal) as any;
     });
   }
 
+  deleteAllInputs(){
+    this.detail.rows.forEach(r => {
+      r.value = 0;
+    });
+    this.activeRowId = this.detail.rows[0].id; //reset active row to the first one
+  }
 
 }
